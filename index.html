@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>circlebuster</title>
+  <style>
+    .circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 100px;
+      font-size: 24px;
+      margin: 10px;
+      display: inline-block;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <p id="question"></p>
+  <div id="circles"></div>
+  <p id="message"></p>
+
+  <script>
+    var level = 1;
+    var score = 0;
+    var operator;
+    var question;
+
+    function generateQuestion() {
+      var num1 = Math.floor(Math.random() * 10) + 1;
+      var num2 = Math.floor(Math.random() * 10) + 1;
+
+      var operators = ['+', '-', '*'];
+      operator = operators[Math.floor(Math.random() * operators.length)];
+
+      switch (operator) {
+        case '+':
+          question = num1 + ' + ' + num2;
+          answer = num1 + num2;
+          break;
+        case '-':
+          question = num1 + ' - ' + num2;
+          answer = num1 - num2;
+          break;
+        case '*':
+          question = num1 + ' * ' + num2;
+          answer = num1 * num2;
+          break;
+      }
+
+      document.getElementById('question').textContent = 'Nivel: ' + level + ' | Pregunta: ' + question;
+    }
+
+    function generateCircles() {
+      var circlesDiv = document.getElementById('circles');
+      circlesDiv.innerHTML = '';
+
+      for (var i = 0; i < level + 2; i++) {
+        var circle = document.createElement('div');
+        var number = Math.floor(Math.random() * 20) + 1;
+        circle.textContent = number;
+        circle.className = 'circle';
+        circle.addEventListener('click', checkAnswer);
+        circlesDiv.appendChild(circle);
+      }
+    }
+
+    function checkAnswer(event) {
+      var selectedNumber = parseInt(event.target.textContent);
+
+      if (selectedNumber === answer) {
+        score++;
+        level++;
+        document.getElementById('message').textContent = '¡Correcto!';
+        playGame();
+      } else {
+        document.getElementById('message').textContent = '¡No calculaste bien! Nivel: ' + level + ' | Pregunta: ' + question;
+        resetGame();
+      }
+    }
+
+    function resetGame() {
+      level = 1;
+      score = 0;
+      generateQuestion();
+      generateCircles();
+    }
+
+    function playGame() {
+      generateQuestion();
+      generateCircles();
+      document.getElementById('message').textContent = '';
+    }
+
+    playGame();
+  </script>
+</body>
+</html>
